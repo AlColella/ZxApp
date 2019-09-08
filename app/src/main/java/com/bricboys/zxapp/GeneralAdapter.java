@@ -58,11 +58,14 @@ public class GeneralAdapter extends ArrayAdapter<General> {
 
 //Log.e("image id: ", currentGeneral.getmImageId());
         TextView text = listItemView.findViewById(R.id.textScreen);
+       // Log.e("Titulo: ", currentGeneral.getmTitle());
+       // Log.e("Id img: ",currentGeneral.getmImageId());
         if(!currentGeneral.getmImageId().isEmpty()) {
             String url = currentGeneral.getmImageId();
             String typeImg = currentGeneral.getTypeImage();
             String newUrl = null;
-            //Log.e("type: ", type.getText().toString());
+           // Log.e("type: ", type.getText().toString());
+           // Log.e("typeimg: ", typeImg);
             if (type.getText().toString().equals("Type: Book") ||
                     type.getText().toString().equals("Type: Hardware")) {
                 text.setText("Image");
@@ -71,6 +74,13 @@ public class GeneralAdapter extends ArrayAdapter<General> {
                 } else {
                     newUrl = url.replaceAll("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
                 }
+
+               //Log.e("URL da lista: ", newUrl);
+                ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
+                Ion.with(imageView).load(newUrl).cancel();
+                Ion.with(imageView).load(newUrl);
+                imageView.setVisibility(View.VISIBLE);
+                text.setVisibility(View.VISIBLE);
             } else {
                 //if(type.getText().toString().equals("Type: Loading screen")) {
                 Ion.getDefault(getContext()).getHttpClient().getSSLSocketMiddleware().setSpdyEnabled(false);
@@ -78,30 +88,36 @@ public class GeneralAdapter extends ArrayAdapter<General> {
                     newUrl = "https://zxinfo.dk/media" + url;
                     text.setText("Loading Screen");
                     ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
-                    imageView.setVisibility(View.VISIBLE);
                     Ion.with(imageView).load(newUrl).cancel();
                     Ion.with(imageView).load(newUrl);
+                    imageView.setVisibility(View.VISIBLE);
                     //Picasso.get().cancelRequest(imageView);
                     //Picasso.get().load(newUrl).into(imageView);
                     text.setVisibility(View.VISIBLE);
                 } else {
                     if(typeImg.equals("Running screen")) {
+
+
                         //newUrl = "https://archive.zx-spectrum.org.uk/WoS" + url;
                         if (url.substring(0, 14).equals("/pub/sinclair/")) {
                             newUrl = url.replaceAll("/pub/sinclair/", ParameterClass.pubSinclair);
-                        } else {
+                        } else  if (url.substring(0, 14).equals("/zxdb/sinclair/")) {
                             newUrl = url.replaceAll("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
+                        } else {
+                            newUrl = "https://zxinfo.dk/media" + url;
                         }
+
+                        //Log.e("Running", "url: " + newUrl);
                         text.setText("Running Screen");
                         ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
-                        //imageView.setVisibility(View.VISIBLE)
+
                         //Picasso.get().cancelRequest(imageView);
                         //Picasso.get().load(newUrl).into(imageView);
-                        //Glide.with(getContext()).load(newUrl).into(imageView);
-                        //Ion.with
-                        Log.e("Url: ", newUrl);
+
                         Ion.with(imageView).load(newUrl).cancel();
                         Ion.with(imageView).load(newUrl);
+                        Ion.with(getContext()).load(newUrl).intoImageView(imageView);
+                        imageView.setVisibility(View.VISIBLE);
                         text.setVisibility(View.VISIBLE);
                     }
                 }
@@ -112,11 +128,11 @@ public class GeneralAdapter extends ArrayAdapter<General> {
                  //   }
             }
             //Log.e("Livro: ", newUrl);
-            ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
+            /*ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
             imageView.setVisibility(View.VISIBLE);
             Picasso.get().cancelRequest(imageView);
             Picasso.get().load(newUrl).into(imageView);
-            text.setVisibility(View.VISIBLE);
+            text.setVisibility(View.VISIBLE); */
         } else {
             ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
             imageView.setVisibility(View.GONE);

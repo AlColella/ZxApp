@@ -68,11 +68,14 @@ public class GeneralQuery {
                     JSONObject screen = additionals.getJSONObject(y);
                     String format = screen.optString("format");
                     String typeScreen = screen.optString("type");
-                    //Log.e("format: ", format);
-                    //Log.e("type: ", typeScreen);
-                    if(format.equals("Picture") &&
+                    // Log.e("title: ", title);
+                    // Log.e("format: ", format);
+                    // Log.e("type: ", typeScreen);
+                    // Log.e("substr", format.substring(0,7));
+                    if(format.substring(0,7).equals("Picture") &&
                             (typeScreen.equals("Loading screen")||
-                             typeScreen.equals("Running screen"))) {
+                             typeScreen.equals("Running screen") ||
+                              typeScreen.equals("Hardware thumbnail"))) {
                         imageId = screen.optString("url");
                         typeImage = typeScreen.toString();
                         //Log.e("Loading screen: ", imageId);

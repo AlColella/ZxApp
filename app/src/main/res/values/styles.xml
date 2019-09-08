@@ -18,15 +18,20 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
+    <!-- Style for a category of vocabulary words -->
+    <style name="CategoryStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_item_height</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
 
-        <!-- Style for a category of vocabulary words -->
-        <style name="CategoryStyle">
-            <item name="android:layout_width">match_parent</item>
-            <item name="android:layout_height">@dimen/list_item_height</item>
-            <item name="android:gravity">center_vertical</item>
-            <item name="android:padding">16dp</item>
-            <item name="android:textColor">@android:color/white</item>
-            <item name="android:textStyle">bold</item>
-            <item name="android:textAppearance">?android:textAppearanceMedium</item>
-        </style>
+    <style name="MineCustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

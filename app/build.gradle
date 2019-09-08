@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.bricboys.zxapp"
         minSdkVersion 16
-        targetSdkVersion 27
-        versionCode 9
-        versionName "48K Issue 2B"
+        targetSdkVersion 28
+        versionCode 15
+        versionName "48K Issue 3B"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

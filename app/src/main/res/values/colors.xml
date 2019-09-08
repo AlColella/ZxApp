@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorAccent">#FF4081</color>
     <!-- Background color for app -->
-    <color name="tan_background">#FFF7DA</color>
+   <!-- <color name="tan_background">#FFF7DA</color> -->
 
     <!-- Background color for the numbers category -->
     <color name="category_magazine">#FD8E09</color>
@@ -17,4 +17,12 @@
 
     <!-- Background color for the phrases category -->
     <color name="category_more">#16AFCA</color>
+
+
+    <color name="primary_color">#4CAF50</color>
+
+    <!-- Primary dark color of the app (shown in the status bar) -->
+    <color name="primary_dark_color">#1B5E20</color>
+
+    <color name="color_accent">#FF4081</color>
 </resources>

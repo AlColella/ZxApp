@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.bricboys.zxapp.details.DetailsActivity;
+import com.bricboys.zxapp.details.DetalheFragmentPageAdapter;
 
 import java.util.ArrayList;
 
@@ -41,7 +43,16 @@ public class GeneralSearch extends AppCompatActivity implements LoaderManager.Lo
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    openYoutube(mAdapter.getItem(position).getmYoutubeLink());
+                    //openYoutube(mAdapter.getItem(position).getmYoutubeLink());
+                    String itemId = mAdapter.getItem(position).getmId();
+                    String type = mAdapter.getItem(position).getmType();
+                    String name = mAdapter.getItem(position).getmTitle();
+                    //if(type.contains("Game")) {
+                        Intent detail = new Intent(GeneralSearch.this, DetailsActivity.class);
+                        detail.putExtra("itemId", itemId);
+                        detail.putExtra("name", name);
+                        startActivity(detail);
+                    //}
                 }
             });
             getLoaderManager().initLoader(1, null, GeneralSearch.this);
