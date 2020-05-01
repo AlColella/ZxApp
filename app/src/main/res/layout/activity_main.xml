@@ -24,7 +24,7 @@
         android:background="@color/category_magazine">
     <TextView
         android:id="@+id/magazineTextView"
-        android:text="Magazine Search"
+        android:text="Magazine Covers"
         android:textColor="@android:color/white"
         style="@style/CategoryStyle"
         android:background="?android:attr/selectableItemBackground"/>

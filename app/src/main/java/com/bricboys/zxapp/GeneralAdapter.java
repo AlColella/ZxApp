@@ -58,14 +58,14 @@ public class GeneralAdapter extends ArrayAdapter<General> {
 
 //Log.e("image id: ", currentGeneral.getmImageId());
         TextView text = listItemView.findViewById(R.id.textScreen);
-       // Log.e("Titulo: ", currentGeneral.getmTitle());
-       // Log.e("Id img: ",currentGeneral.getmImageId());
-        if(!currentGeneral.getmImageId().isEmpty()) {
+        // Log.e("Titulo: ", currentGeneral.getmTitle());
+        // Log.e("Id img: ",currentGeneral.getmImageId());
+        if (!currentGeneral.getmImageId().isEmpty()) {
             String url = currentGeneral.getmImageId();
             String typeImg = currentGeneral.getTypeImage();
             String newUrl = null;
-           // Log.e("type: ", type.getText().toString());
-           // Log.e("typeimg: ", typeImg);
+            // Log.e("type: ", type.getText().toString());
+            // Log.e("typeimg: ", typeImg);
             if (type.getText().toString().equals("Type: Book") ||
                     type.getText().toString().equals("Type: Hardware")) {
                 text.setText("Image");
@@ -75,7 +75,7 @@ public class GeneralAdapter extends ArrayAdapter<General> {
                     newUrl = url.replaceAll("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
                 }
 
-               //Log.e("URL da lista: ", newUrl);
+                //Log.e("URL da lista: ", newUrl);
                 ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
                 Ion.with(imageView).load(newUrl).cancel();
                 Ion.with(imageView).load(newUrl);
@@ -84,24 +84,49 @@ public class GeneralAdapter extends ArrayAdapter<General> {
             } else {
                 //if(type.getText().toString().equals("Type: Loading screen")) {
                 Ion.getDefault(getContext()).getHttpClient().getSSLSocketMiddleware().setSpdyEnabled(false);
-                if(typeImg.equals("Loading screen")) {
-                    newUrl = "https://zxinfo.dk/media" + url;
-                    text.setText("Loading Screen");
-                    ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
-                    Ion.with(imageView).load(newUrl).cancel();
-                    Ion.with(imageView).load(newUrl);
-                    imageView.setVisibility(View.VISIBLE);
-                    //Picasso.get().cancelRequest(imageView);
-                    //Picasso.get().load(newUrl).into(imageView);
-                    text.setVisibility(View.VISIBLE);
+
+                if (ScreenManager.verifyScreen().equals("loading")) {
+                    if (typeImg.equals("Loading screen")) {
+                        newUrl = "https://zxinfo.dk/media" + url;
+                        text.setText("Loading Screen");
+                        ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
+                        Ion.with(imageView).load(newUrl).cancel();
+                        Ion.with(imageView).load(newUrl);
+                        imageView.setVisibility(View.VISIBLE);
+                        //Picasso.get().cancelRequest(imageView);
+                        //Picasso.get().load(newUrl).into(imageView);
+                        text.setVisibility(View.VISIBLE);
+                    } else {
+                        if (typeImg.equals("Running screen")) {
+                            //newUrl = "https://archive.zx-spectrum.org.uk/WoS" + url;
+                            if (url.substring(0, 14).equals("/pub/sinclair/")) {
+                                newUrl = url.replaceAll("/pub/sinclair/", ParameterClass.pubSinclair);
+                            } else if (url.substring(0, 14).equals("/zxdb/sinclair/")) {
+                                newUrl = url.replaceAll("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
+                            } else {
+                                newUrl = "https://zxinfo.dk/media" + url;
+                            }
+
+                            //Log.e("Running", "url: " + newUrl);
+                            text.setText("Running Screen");
+                            ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
+
+                            //Picasso.get().cancelRequest(imageView);
+                            //Picasso.get().load(newUrl).into(imageView);
+
+                            Ion.with(imageView).load(newUrl).cancel();
+                            Ion.with(imageView).load(newUrl);
+                            Ion.with(getContext()).load(newUrl).intoImageView(imageView);
+                            imageView.setVisibility(View.VISIBLE);
+                            text.setVisibility(View.VISIBLE);
+                        }
+                    }
                 } else {
-                    if(typeImg.equals("Running screen")) {
-
-
+                    if (typeImg.equals("Running screen")) {
                         //newUrl = "https://archive.zx-spectrum.org.uk/WoS" + url;
                         if (url.substring(0, 14).equals("/pub/sinclair/")) {
                             newUrl = url.replaceAll("/pub/sinclair/", ParameterClass.pubSinclair);
-                        } else  if (url.substring(0, 14).equals("/zxdb/sinclair/")) {
+                        } else if (url.substring(0, 14).equals("/zxdb/sinclair/")) {
                             newUrl = url.replaceAll("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
                         } else {
                             newUrl = "https://zxinfo.dk/media" + url;
@@ -119,14 +144,15 @@ public class GeneralAdapter extends ArrayAdapter<General> {
                         Ion.with(getContext()).load(newUrl).intoImageView(imageView);
                         imageView.setVisibility(View.VISIBLE);
                         text.setVisibility(View.VISIBLE);
+
                     }
                 }
-                //} else {
-                //    if(type.getText().toString().equals("Type: Running screen")) {
-                //        newUrl = "https://archive.zx-spectrum.org.uk/WoS/" + url;
-                //        text.setText("Running Screen");
-                 //   }
             }
+            //} else {
+            //    if(type.getText().toString().equals("Type: Running screen")) {
+            //        newUrl = "https://archive.zx-spectrum.org.uk/WoS/" + url;
+            //        text.setText("Running Screen");
+            //   }
             //Log.e("Livro: ", newUrl);
             /*ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
             imageView.setVisibility(View.VISIBLE);
@@ -139,7 +165,9 @@ public class GeneralAdapter extends ArrayAdapter<General> {
             text.setVisibility(View.GONE);
         }
 
-        if(currentGeneral.getmYoutubeLink().isEmpty()) {
+        if (currentGeneral.getmYoutubeLink().
+
+                isEmpty()) {
             TextView youtube = listItemView.findViewById(R.id.video_link);
             youtube.setText("Video: No");
         } else {

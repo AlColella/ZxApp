@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 public class GeneralActivity extends AppCompatActivity {
 
     private Button mButton;
+    private RadioButton loading;
+    private RadioButton running;
+
     private EditText mGeneralEdit;
 
     @Override
@@ -19,6 +23,30 @@ public class GeneralActivity extends AppCompatActivity {
         this.setTitle("General Search");
 
         mGeneralEdit = findViewById(R.id.general_edit);
+        loading = findViewById(R.id.radio_loading);
+        running = findViewById(R.id.radio_running);
+        loading.setActivated(true);
+        loading.setChecked(true);
+        running.setActivated(false);
+        ScreenManager.screenView = "loading";
+        loading.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                loading.setActivated(true);
+                running.setActivated(false);
+                ScreenManager.screenView = "loading";
+            }
+        });
+
+        running.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loading.setActivated(false);
+                running.setActivated(true);
+                ScreenManager.screenView = "running";
+            }
+        });
 
         mButton = findViewById(R.id.buttonSearch);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -31,4 +59,5 @@ public class GeneralActivity extends AppCompatActivity {
         });
 
     }
+
 }

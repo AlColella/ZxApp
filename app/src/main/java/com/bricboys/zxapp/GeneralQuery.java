@@ -22,7 +22,10 @@ public class GeneralQuery {
     private final static String GENERAL_URL =
             "https://api.zxinfo.dk/api/zxinfo/v2/search?query=";
 
-    private GeneralQuery() {};
+    private GeneralQuery() {
+    }
+
+    ;
 
     public static List<General> extractGeneral(String parametro) {
         URL url = createUrl(GENERAL_URL, parametro);
@@ -42,7 +45,7 @@ public class GeneralQuery {
             root = new JSONObject(jsonResponse);
             JSONObject response = root.getJSONObject("hits");
             JSONArray hits = response.getJSONArray("hits");
-            for(int i=0; i<hits.length(); i++) {
+            for (int i = 0; i < hits.length(); i++) {
                 JSONObject obj = hits.getJSONObject(i);
                 String id = obj.optString("_id");
                 JSONObject source = obj.getJSONObject("_source");
@@ -50,9 +53,9 @@ public class GeneralQuery {
                 String title = source.optString("fulltitle");
                 JSONArray publisher = source.getJSONArray("publisher");
                 String pub = "";
-                for(int x=0; x<publisher.length(); x++) {
+                for (int x = 0; x < publisher.length(); x++) {
                     JSONObject obj2 = publisher.getJSONObject(x);
-                    if (x==0) {
+                    if (x == 0) {
                         pub = obj2.optString("name");
                     } else {
                         pub = pub + ", " + obj2.optString("name");
@@ -64,27 +67,51 @@ public class GeneralQuery {
                 JSONArray additionals = source.getJSONArray("screens");
                 String imageId = "";
                 String typeImage = "";
-                for(int y=0;y<additionals.length();y++) {
+                for (int y = 0; y < additionals.length(); y++) {
                     JSONObject screen = additionals.getJSONObject(y);
                     String format = screen.optString("format");
                     String typeScreen = screen.optString("type");
                     // Log.e("title: ", title);
                     // Log.e("format: ", format);
-                    // Log.e("type: ", typeScreen);
+                    //Log.e("type: ", type);
                     // Log.e("substr", format.substring(0,7));
-                    if(format.substring(0,7).equals("Picture") &&
-                            (typeScreen.equals("Loading screen")||
-                             typeScreen.equals("Running screen") ||
-                              typeScreen.equals("Hardware thumbnail"))) {
-                        imageId = screen.optString("url");
-                        typeImage = typeScreen.toString();
-                        //Log.e("Loading screen: ", imageId);
-                        break;
+                    if (format.substring(0, 7).equals("Picture") &&
+                            (typeScreen.equals("Loading screen") ||
+                                    typeScreen.equals("Running screen") ||
+                                    typeScreen.equals("Hardware thumbnail"))) {
+
+                        if (typeScreen.equals("Hardware thumbnail")) {
+                            imageId = screen.optString("url");
+                            typeImage = typeScreen.toString();
+                            break;
+                        }
+
+                        if((type.equals("Book")) &&
+                                (typeScreen.equals("Loading screen"))){
+                            imageId = screen.optString("url");
+                            typeImage = typeScreen.toString();
+                            //Log.e("Loading screen: ", imageId);
+                            break;
+                        }
+                        if ((ScreenManager.verifyScreen().equals("loading")) &&
+                        (typeScreen.equals("Loading screen"))) {
+                            imageId = screen.optString("url");
+                            typeImage = typeScreen.toString();
+                            //Log.e("Loading screen: ", imageId);
+                            break;
+                        }
+                        if((ScreenManager.verifyScreen().equals("running")) &&
+                        (typeScreen.equals("Running screen"))) {
+                            imageId = screen.optString("url");
+                            typeImage = typeScreen.toString();
+                            //Log.e("Loading screen: ", imageId);
+                            break;
+                        }
                     }
                 }
                 String urlYoutube = "";
                 JSONArray youtube = source.getJSONArray("youtubelinks");
-                for(int b=0;b<youtube.length();b++) {
+                for (int b = 0; b < youtube.length(); b++) {
                     JSONObject you = youtube.getJSONObject(b);
                     urlYoutube = you.optString("link");
                     break;
@@ -92,15 +119,15 @@ public class GeneralQuery {
 
                 JSONObject score = source.getJSONObject("score");
                 String scoreText = score.optString("score");
-                if (scoreText=="null") {
-                    scoreText="";
+                if (scoreText == "null") {
+                    scoreText = "";
                 }
-                String auth="";
+                String auth = "";
                 JSONArray authors = source.getJSONArray("authors");
-                for(int x=0; x<authors.length(); x++) {
+                for (int x = 0; x < authors.length(); x++) {
                     JSONObject authors2 = authors.getJSONObject(x);
                     JSONArray authors3 = authors2.getJSONArray("authors");
-                    for(int  y=0; y<authors3.length(); y++) {
+                    for (int y = 0; y < authors3.length(); y++) {
                         JSONObject at = authors3.getJSONObject(y);
                         if (y == 0) {
                             auth = at.optString("name");
@@ -127,7 +154,7 @@ public class GeneralQuery {
         } catch (MalformedURLException e) {
             Log.e("Error in URL ", e.getMessage());
         }
-        return  url;
+        return url;
     }
 
     private static String makeHttpRequest(URL url) throws IOException {
