@@ -20,7 +20,9 @@ import java.util.List;
 public class GeneralQuery {
 
     private final static String GENERAL_URL =
-            "https://api.zxinfo.dk/api/zxinfo/v2/search?query=";
+            "https://api.zxinfo.dk/v3/search?query=";
+    //        "https://api.zxinfo.dk/api/zxinfo/v2/search?query=";
+
 
     private GeneralQuery() {
     }
@@ -49,21 +51,30 @@ public class GeneralQuery {
                 JSONObject obj = hits.getJSONObject(i);
                 String id = obj.optString("_id");
                 JSONObject source = obj.getJSONObject("_source");
-                String release = source.optString("yearofrelease");
-                String title = source.optString("fulltitle");
-                JSONArray publisher = source.getJSONArray("publisher");
+                String release = source.optString("originalYearOfRelease");
+                String title = source.optString("title");
+                JSONArray releases = source.getJSONArray("releases");
                 String pub = "";
-                for (int x = 0; x < publisher.length(); x++) {
-                    JSONObject obj2 = publisher.getJSONObject(x);
-                    if (x == 0) {
-                        pub = obj2.optString("name");
-                    } else {
-                        pub = pub + ", " + obj2.optString("name");
+                for(int g = 0; g<releases.length(); g++) {
+                    JSONObject item = releases.getJSONObject(g);
+                    if(item != null) {
+                        JSONArray publisher = item.optJSONArray("publishers");
+
+                        for (int x = 0; x < publisher.length(); x++) {
+                            JSONObject obj2 = publisher.getJSONObject(x);
+                            if (g == 0) {
+                                pub = obj2.optString("name");
+                            } else {
+                                pub = pub + ", " + obj2.optString("name");
+                            }
+                        }
                     }
+
+
                 }
                 String available = source.optString("availability");
-                String type = source.optString("type");
-                String machine = source.optString("machinetype");
+                String type = source.optString("genreType");
+                String machine = source.optString("machineType");
                 JSONArray additionals = source.getJSONArray("screens");
                 String imageId = "";
                 String typeImage = "";
@@ -110,12 +121,12 @@ public class GeneralQuery {
                     }
                 }
                 String urlYoutube = "";
-                JSONArray youtube = source.getJSONArray("youtubelinks");
-                for (int b = 0; b < youtube.length(); b++) {
-                    JSONObject you = youtube.getJSONObject(b);
-                    urlYoutube = you.optString("link");
-                    break;
-                }
+               // JSONArray youtube = source.getJSONArray("youtubelinks");
+               // for (int b = 0; b < youtube.length(); b++) {
+               //     JSONObject you = youtube.getJSONObject(b);
+               //     urlYoutube = you.optString("link");
+               //     break;
+               // }
 
                 JSONObject score = source.getJSONObject("score");
                 String scoreText = score.optString("score");
@@ -125,10 +136,8 @@ public class GeneralQuery {
                 String auth = "";
                 JSONArray authors = source.getJSONArray("authors");
                 for (int x = 0; x < authors.length(); x++) {
-                    JSONObject authors2 = authors.getJSONObject(x);
-                    JSONArray authors3 = authors2.getJSONArray("authors");
-                    for (int y = 0; y < authors3.length(); y++) {
-                        JSONObject at = authors3.getJSONObject(y);
+                    for (int y = 0; y < authors.length(); y++) {
+                        JSONObject at = authors.getJSONObject(y);
                         if (y == 0) {
                             auth = at.optString("name");
                         } else {
@@ -148,7 +157,7 @@ public class GeneralQuery {
     private static URL createUrl(String magazineUrl, String parametro) {
         URL url = null;
         String parametroFormatted = parametro.replaceAll(" ", "%20");
-        String newUrl = magazineUrl + parametroFormatted + "&mode=full&sort=title_asc&size=1000&offset=0";
+        String newUrl = magazineUrl + parametroFormatted + "&mode=compact&size=100&offset=0";
         try {
             url = new URL(newUrl);
         } catch (MalformedURLException e) {
@@ -168,6 +177,7 @@ public class GeneralQuery {
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty("User-Agent", "ZX App/1.0");
             urlConnection.connect();
 
             if (urlConnection.getResponseCode() == 200) {

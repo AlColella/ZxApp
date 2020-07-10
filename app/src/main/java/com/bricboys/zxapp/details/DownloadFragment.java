@@ -3,14 +3,16 @@ package com.bricboys.zxapp.details;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +23,12 @@ import android.widget.ProgressBar;
 import com.bricboys.zxapp.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DownloadFragment  extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<Tapes>> {
 
     private String mParametro;
-    private String mNome;
+    private String mNome;///
     private String url;
     private View rootView;
     private TapeAdapter mAdapter;
@@ -47,11 +50,13 @@ public class DownloadFragment  extends Fragment implements LoaderManager.LoaderC
         ListView listView = rootView.findViewById(R.id.list_tapes);
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String mUrl = mAdapter.getItem(position).getmUrl();
+                String mUrl = Objects.requireNonNull(mAdapter.getItem(position)).getmUrl();
                 DownloadManager mManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
                 DownloadManager.Request mRqRequest = new DownloadManager.Request(Uri.parse(mUrl));
+                mRqRequest.setTitle(mNome);
                 mRqRequest.setDescription("Downloading file");
                 mRqRequest.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mNome + ".zip");
                 long idDownLoad=mManager.enqueue(mRqRequest);

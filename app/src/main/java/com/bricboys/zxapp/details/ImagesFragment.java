@@ -2,10 +2,11 @@ package com.bricboys.zxapp.details;
 
 //import android.support.v4.app.Loader;
 import android.content.Intent;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +87,8 @@ public class ImagesFragment extends Fragment implements LoaderManager.LoaderCall
             ImageView inlay = rootView.findViewById(R.id.inlay);
             inlay.setVisibility(View.VISIBLE);
             Ion.with(inlay).load(newUrl).cancel();
+
+            Log.e("Inlay url: ", newUrl);
             //Ion.with(inlay).load(newUrl);
             Ion.with(this).load(newUrl).intoImageView(inlay);
         } else {
@@ -162,6 +165,7 @@ public class ImagesFragment extends Fragment implements LoaderManager.LoaderCall
             video.setOnClickListener (new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Log.e("YouTube Link", url);
                     openYoutube(url);
                 }
             });

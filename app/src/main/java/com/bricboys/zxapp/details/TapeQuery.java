@@ -20,13 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TapeQuery {
-    private final static String GENERAL_URL =
-            "https://api.zxinfo.dk/api/zxinfo/games/";
+    private final static String GENERAL_URL = "https://api.zxinfo.dk/v3/games/";
+            //"https://api.zxinfo.dk/api/zxinfo/games/";
 
     private TapeQuery(){}
 
-
     public static List<Tapes> extractTapes(String parametro) {
+
+        Log.e("QUE BOSTA", "==================PQP. NAO DA+++++++++++");
 
         ArrayList<Tapes> tapes = new ArrayList<>();
         //tapes = null;
@@ -50,29 +51,40 @@ public class TapeQuery {
         String mPublisher = "";
         String mOrigin = "";
 
+        Log.e("======= JSON RESPONSE: ", jsonResponse);
+
         try {
             root = new JSONObject(jsonResponse);
             JSONObject _source = root.getJSONObject("_source");
+            Log.e("====== RELEASES", "PQP NAO VAI!!!");
             JSONArray releases = _source.getJSONArray("releases");
+            Log.e("====== RELEASES", "PQP NAO VAI");
             for(int i=0;i<releases.length();i++) {
-                JSONObject obj = releases.getJSONObject(i);
-                mSize = obj.optString("size");
-                mUrl = obj.optString("url");
-                mType = obj.optString("type");
-                mFormat = obj.optString("format");
-                mEncoding = obj.optString("encodingscheme");
-                mPublisher = obj.optString("publisher");
-                mOrigin = obj.optString("origin");
+                Log.e("==== RELEASES =====", "aff..." + i);
+                JSONObject obj2 = releases.getJSONObject(i);
+              // Log.e("======= OBJ 2:", obj2.toString());
+                JSONArray files = obj2.getJSONArray("files");
+                for(int f=0;f<files.length();f++) {
+                    Log.e("======= OBJ: ", obj2.toString());
+                    JSONObject obj = files.getJSONObject(f);
+                    mSize = obj.optString("size");
+                    mUrl = obj.optString("path");
+                    mType = obj.optString("type");
+                    mFormat = obj.optString("format");
+                    mEncoding = obj.optString("encodingScheme");
+                    //mPublisher = obj.optString("publisher");
+                    mOrigin = obj.optString("origin");
 
-                if (!mUrl.isEmpty()) {
-                    String Url = mUrl;
-                    String newUrl = "";
-                    if (Url.substring(0, 14).equals("/pub/sinclair/")) {
-                        newUrl = Url.replaceAll("/pub/sinclair/", ParameterClass.pubSinclair);
-                    } else {
-                        newUrl = Url.replaceAll("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
+                    if (!mUrl.isEmpty()) {
+                        String Url = mUrl;
+                        String newUrl = "";
+                        if (Url.substring(0, 14).equals("/pub/sinclair/")) {
+                            newUrl = Url.replaceAll("/pub/sinclair/", ParameterClass.pubSinclair);
+                        } else {
+                            newUrl = Url.replaceAll("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
+                        }
+                        tapes.add(new Tapes(mSize, newUrl, mType, mFormat, mEncoding, mPublisher, mOrigin));
                     }
-                    tapes.add(new Tapes(mSize, newUrl, mType, mFormat, mEncoding, mPublisher, mOrigin));
                 }
             }
         } catch (JSONException e) {
@@ -86,17 +98,20 @@ public class TapeQuery {
     private static URL createUrl(String gameUrl, String parametro) {
         URL url = null;
         String newUrl = gameUrl + parametro + "?mode=full";
-        //Log.e("Nova URL: ", newUrl);
+        Log.e("Nova URL: ", newUrl);
         try {
             url = new URL(newUrl);
         } catch (MalformedURLException e) {
             Log.e("Error in URL ", e.getMessage());
         }
+
+        //Log.e("== URL POW:", url.toString());
         return  url;
     }
 
     private static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
+        Log.e("CONNECT: ", url.toString());
 
         if (url == null) {
             return jsonResponse;

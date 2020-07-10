@@ -7,15 +7,17 @@
     android:background="#C5CAE9"
     tools:context="com.bricboys.zxapp.MainActivity">
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/category_general">
-    <TextView
-        android:id="@+id/generalTextView"
-        android:text="General Search"
-        style="@style/CategoryStyle"
-        android:background="?android:attr/selectableItemBackground"/>
+        android:background="@color/category_zxart">
+        <TextView
+            android:id="@+id/zxartTextView"
+            android:text="@string/zxart"
+            android:textColor="@android:color/white"
+            style="@style/CategoryStyle"
+            android:background="?android:attr/selectableItemBackground"/>
     </FrameLayout>
 
     <FrameLayout
@@ -28,6 +30,29 @@
         android:textColor="@android:color/white"
         style="@style/CategoryStyle"
         android:background="?android:attr/selectableItemBackground"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/category_general">
+        <TextView
+            android:id="@+id/generalTextView"
+            android:text="General Search"
+            style="@style/CategoryStyle"
+            android:background="?android:attr/selectableItemBackground"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/category_more">
+        <TextView
+            android:id="@+id/wallpaperTextView"
+            android:text="Wallpapers"
+            android:textColor="@android:color/white"
+            style="@style/CategoryStyle"
+            android:background="?android:attr/selectableItemBackground"/>
     </FrameLayout>
 
 </LinearLayout>

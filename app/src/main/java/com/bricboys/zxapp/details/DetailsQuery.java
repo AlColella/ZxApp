@@ -17,7 +17,8 @@ import java.nio.charset.Charset;
 
 public class DetailsQuery {
     private final static String GENERAL_URL =
-            "https://api.zxinfo.dk/api/zxinfo/games/";
+        "https://api.zxinfo.dk/v3/games/";
+        //"https://api.zxinfo.dk/api/zxinfo/games/";
 
     private DetailsQuery() {};
 
@@ -34,6 +35,8 @@ public class DetailsQuery {
             Log.e("Error http request", e.getMessage());
         }
 
+        //Log.e("antes 1", "www.santosfc.com.br");
+
         JSONObject root;
 
         String mInlay = "";
@@ -42,19 +45,43 @@ public class DetailsQuery {
         String mLoadingScreen = "";
         String mYouTube = "";
 
+       // Log.e("antes 2", "www.uol.com.br");
+
         try {
             root = new JSONObject(jsonResponse);
             JSONObject _source = root.getJSONObject("_source");
-            JSONArray additionals = _source.getJSONArray("additionals");
+            JSONArray additionals = _source.getJSONArray("additionalDownloads");
+            //Log.e("additionals", additionals.toString());
             for(int i=0;i<additionals.length();i++) {
                 JSONObject obj = additionals.getJSONObject(i);
                 String type = obj.optString("type");
-                if(type.equals("Cassette inlay")) {
-                    mInlay = obj.optString("url");
-                    Log.e("Inlay url: ", mInlay);
-                    //break;
+                String path =obj.optString("path");
+                if(type.contains("Inlay - Front") && path.contains("pub/sinclair")) {
+                   // Log.e("achei", "entrei no inlay front");
+                    mInlay = obj.optString("path");
+                    //Log.e("Inlay url: ", mInlay);
+                    break;
                 }
             }
+
+            //Log.e("INLAY: ", "www.terra.com.br");
+
+            if(mInlay.isEmpty()) {
+                JSONArray additionals2 = _source.getJSONArray("additionalDownloads");
+                for(int i=0;i<additionals2.length();i++) {
+                    JSONObject obj = additionals2.getJSONObject(i);
+                    String type = obj.optString("type");
+                    String path =obj.optString("path");
+                    if(type.contains("Cassette inlay")) {
+                        mInlay = obj.optString("path");
+                       // Log.e("Inlay2 url: ", mInlay);
+                        break;
+                    }
+                }
+            }
+
+           // Log.e("INLAY 2: " , mInlay);
+
             JSONArray screens = _source.getJSONArray("screens");
             for(int i=0;i<screens.length();i++) {
                 JSONObject obj = screens.getJSONObject(i);
@@ -67,7 +94,7 @@ public class DetailsQuery {
             for(int i=0;i<screens.length();i++) {
                 JSONObject obj = screens.getJSONObject(i);
                 String type = obj.optString("type");
-                Log.e("Tipo: ", type);
+                //Log.e("Tipo: ", type);
                 if(type.equals("Loading screen")||
                         type.equals("Running screen") ||
                         type.equals("Hardware thumbnail")) {
@@ -75,10 +102,10 @@ public class DetailsQuery {
                     break;
                 }
             }
-            JSONArray youtubelinks = _source.getJSONArray("youtubelinks");
+            JSONArray youtubelinks = _source.getJSONArray("youTubeLinks");
             for(int i=0;i<youtubelinks.length();i++) {
                 JSONObject obj = youtubelinks.getJSONObject(i);
-                String link = obj.optString("link");
+                String link = obj.optString("url");
                 mYouTube = link;
             }
         } catch (JSONException e) {
@@ -94,7 +121,7 @@ public class DetailsQuery {
     private static URL createUrl(String gameUrl, String parametro) {
         URL url = null;
         String newUrl = gameUrl + parametro + "?mode=full";
-        //Log.e("Nova URL: ", newUrl);
+      // Log.e("Nova URL: ", newUrl);
         try {
             url = new URL(newUrl);
         } catch (MalformedURLException e) {
@@ -114,6 +141,7 @@ public class DetailsQuery {
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty("User-Agent", "ZX App/1.0");
             urlConnection.connect();
 
             if (urlConnection.getResponseCode() == 200) {

@@ -4,7 +4,7 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bricboys.zxapp.details.DetailsActivity;
-import com.bricboys.zxapp.details.DetalheFragmentPageAdapter;
 
 import java.util.ArrayList;
 
@@ -26,10 +25,10 @@ public class GeneralSearch extends AppCompatActivity implements LoaderManager.Lo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.general_search);
-        setTitle("General list");
 
         Intent intent = getIntent();
         mParametro = intent.getStringExtra("parametro");
+        setTitle("General list: " + mParametro);
 
         pbar = findViewById(R.id.indeterminateBar);
         pbar.setVisibility(View.VISIBLE);

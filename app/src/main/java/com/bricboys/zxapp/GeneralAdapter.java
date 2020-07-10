@@ -1,9 +1,9 @@
 package com.bricboys.zxapp;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -163,16 +162,6 @@ public class GeneralAdapter extends ArrayAdapter<General> {
             ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
             imageView.setVisibility(View.GONE);
             text.setVisibility(View.GONE);
-        }
-
-        if (currentGeneral.getmYoutubeLink().
-
-                isEmpty()) {
-            TextView youtube = listItemView.findViewById(R.id.video_link);
-            youtube.setText("Video: No");
-        } else {
-            TextView youtube = listItemView.findViewById(R.id.video_link);
-            youtube.setText("Video: Yes");
         }
 
         return listItemView;

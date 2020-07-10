@@ -4,20 +4,21 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView mMagazineTextView;
     private TextView mGeneralTextView;
+    private TextView mWallpaperTextView;
+    private TextView mZxArtTextView;
     private static int REQUEST_CODE=1;
     //private TextView mPublisherTextView;
 
@@ -32,9 +33,19 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         }, REQUEST_CODE);
 
+        mZxArtTextView = findViewById(R.id.zxartTextView);
         mMagazineTextView = findViewById(R.id.magazineTextView);
         mGeneralTextView = findViewById(R.id.generalTextView);
+        mWallpaperTextView = findViewById(R.id.wallpaperTextView);
        // mPublisherTextView = findViewById(R.id.publisherTextView);
+
+        mZxArtTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent zxartIntent = new Intent(MainActivity.this, ZxartActivity.class);
+                startActivity(zxartIntent);
+            }
+        });
 
         mMagazineTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +60,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent generalIntent = new Intent(MainActivity.this, GeneralActivity.class);
                 startActivity(generalIntent);
+            }
+        });
+
+        mWallpaperTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent wallpaperIntent = new Intent(MainActivity.this, WallpaperSearch.class);
+                wallpaperIntent.putExtra("total", "1");
+                wallpaperIntent.putExtra("mode", "full");
+                startActivity(wallpaperIntent);
             }
         });
 

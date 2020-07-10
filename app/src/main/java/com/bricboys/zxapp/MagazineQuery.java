@@ -20,7 +20,8 @@ import java.util.List;
 public final class MagazineQuery {
 
     private final static String MAGAZINE_URL =
-            "https://api.zxinfo.dk/api/zxinfo/v2/magazines/";
+            "https://api.zxinfo.dk/v3/magazines/";
+          //  "https://api.zxinfo.dk/api/zxinfo/v2/magazines/";
 
     private MagazineQuery() {};
 
@@ -41,7 +42,8 @@ public final class MagazineQuery {
         try {
             root = new JSONObject(jsonResponse);
             //JSONObject response = root.getJSONObject("name");
-            JSONArray issues = root.getJSONArray("issues");
+            JSONObject source = root.getJSONObject("_source");
+            JSONArray issues = source.getJSONArray("issues");
             for(int i=0; i<issues.length(); i++) {
                 JSONObject obj = issues.getJSONObject(i);
                 String number = obj.optString("number");
@@ -59,7 +61,7 @@ public final class MagazineQuery {
     private static URL createUrl(String magazineUrl, String parametro) {
         URL url = null;
         String parametroFormatted = parametro.replaceAll(" ", "%20");
-        String newUrl = magazineUrl + parametroFormatted + "/issues";
+        String newUrl = magazineUrl + parametroFormatted;
         try {
             url = new URL(newUrl);
         } catch (MalformedURLException e) {
@@ -79,8 +81,11 @@ public final class MagazineQuery {
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty("User-Agent", "ZX App/1.0");
+            urlConnection.setConnectTimeout(150000);
             urlConnection.connect();
 
+            Log.e("response: ", urlConnection.getResponseCode() + "");
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);

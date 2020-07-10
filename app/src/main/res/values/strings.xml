@@ -3,10 +3,11 @@
     <string name="title_activity_magazine_search">MagazineSearch</string>
     <string name="emptyList">No data to show</string>
     <string name="noInternet">No Internet Connection</string>
-    <string name="about_dialog_msg">Version - 48K Issue 3\nZXDB Database by Einar Saukas\nZXDB API by Thomas Heckmann</string>
+    <string name="about_dialog_msg">Version - 48K Issue 6\nZXDB Database by Einar Saukas\nZXDB API by Thomas Heckmann\nZXART API by moroz1999</string>
     <string name="OK">OK</string>
     <string name="title_activity_details">Details</string>
     <string name="images">Images</string>
     <string name="downloads">Downloads</string>
     <string name="moreinfo">More Info</string>
+    <string name="zxart">ZX Art</string>
 </resources>

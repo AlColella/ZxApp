@@ -42,8 +42,10 @@
 
             <ImageView
                 android:id="@+id/inlay"
-                android:layout_width="260dp"
-                android:layout_height="220dp"
+                android:layout_width="300dp"
+                android:layout_height="260dp"
+                android:scaleType="centerInside"
+                android:layout_gravity="center_horizontal"
                 tools:src="@drawable/no_photo" />
             <TextView
                 android:id="@+id/inlay_text"
@@ -62,6 +64,8 @@
                 android:id="@+id/loading"
                 android:layout_width="260dp"
                 android:layout_height="220dp"
+                android:scaleType="fitXY"
+                android:layout_gravity="center_horizontal"
                 tools:src="@drawable/no_photo" />
             <TextView
                 android:id="@+id/loadText"
@@ -80,6 +84,8 @@
                 android:id="@+id/running"
                 android:layout_width="260dp"
                 android:layout_height="220dp"
+                android:scaleType="fitXY"
+                android:layout_gravity="center_horizontal"
                 tools:src="@drawable/no_photo" />
 
             <TextView
@@ -99,6 +105,7 @@
                 android:id="@+id/video"
                 android:layout_width="260dp"
                 android:layout_height="220dp"
+                android:layout_gravity="center_horizontal"
                 android:foreground="?attr/selectableItemBackground"
                 tools:src="@drawable/no_photo" />
             <TextView
