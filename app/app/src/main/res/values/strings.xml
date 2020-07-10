@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ZX App</string>
+    <string name="title_activity_magazine_search">MagazineSearch</string>
+    <string name="emptyList">No data to show</string>
+    <string name="noInternet">No Internet Connection</string>
+    <string name="about_dialog_msg">Version - 48K Issue 4\nZXDB Database by Einar Saukas\nZXDB API by Thomas Heckmann</string>
+    <string name="OK">OK</string>
+    <string name="title_activity_details">Details</string>
+    <string name="images">Images</string>
+    <string name="downloads">Downloads</string>
+    <string name="moreinfo">More Info</string>
+</resources>

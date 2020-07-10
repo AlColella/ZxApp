@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#C5CAE9">
+
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="?android:attr/selectableItemBackground">
+        <ImageView
+            android:id="@+id/magazine_image"
+            android:adjustViewBounds="true"
+            android:layout_width="100dp"
+            android:layout_height="125dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/no_photo"/>
+        <RelativeLayout
+            android:id="@+id/relativo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/magazine_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                tools:text="Your Sinclair"/>
+            <TextView
+                android:id="@+id/magazine_issue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="12sp"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_below="@id/magazine_name"
+                tools:text="Issue number: 1"/>
+            <TextView
+                android:id="@+id/magazine_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="12sp"
+                android:layout_below="@id/magazine_issue"
+                android:textColor="@android:color/holo_red_dark"
+                tools:text="Year: 1998"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
