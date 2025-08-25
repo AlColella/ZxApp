@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 36
     defaultConfig {
         applicationId "com.bricboys.zxapp"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 34
-        versionCode 36
-        versionName "48K Issue 9"
+        versionCode 37
+        versionName "128 K"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
@@ -22,14 +22,14 @@ android {
 dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.android.material:material:1.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    implementation 'com.koushikdutta.ion:ion:2.2.1'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    androidTestImplementation("androidx.test:core-ktx:1.5.0")
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.7.1'
+    implementation 'androidx.exifinterface:exifinterface:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'com.google.android.material:material:1.12.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+    implementation "com.koushikdutta.ion:ion:3.1.0"
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    androidTestImplementation("androidx.test:core-ktx:1.7.0")
 }

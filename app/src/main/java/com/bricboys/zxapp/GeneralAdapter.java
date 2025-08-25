@@ -82,7 +82,7 @@ public class GeneralAdapter extends ArrayAdapter<General> {
                 text.setVisibility(View.VISIBLE);
             } else {
                 //if(type.getText().toString().equals("Type: Loading screen")) {
-                Ion.getDefault(getContext()).getHttpClient().getSSLSocketMiddleware().setSpdyEnabled(false);
+                Ion.getDefault(getContext()).getHttpClient().getSSLSocketMiddleware();
 
                 if (ScreenManager.verifyScreen().equals("loading")) {
                     if (typeImg.equals("Loading screen")) {

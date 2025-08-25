@@ -75,7 +75,7 @@ public class ImagesFragment extends Fragment implements LoaderManager.LoaderCall
         TextView id = rootView.findViewById(R.id.id_text);
         id.setText(mParametro);
 
-        Ion.getDefault(getContext()).getHttpClient().getSSLSocketMiddleware().setSpdyEnabled(false);
+        Ion.getDefault(getContext()).getHttpClient().getSSLSocketMiddleware();
         url = detail.getmInlay();
         if (!url.isEmpty()) {
             String newUrl = "";

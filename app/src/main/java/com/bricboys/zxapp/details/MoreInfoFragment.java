@@ -85,7 +85,7 @@ public class MoreInfoFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
         if(!more.getAdvertisement().isEmpty()) {
-            Ion.getDefault(getContext()).getHttpClient().getSSLSocketMiddleware().setSpdyEnabled(false);
+            Ion.getDefault(getContext()).getHttpClient().getSSLSocketMiddleware();
             url = more.getAdvertisement();
             if (!url.isEmpty()) {
                 String newUrl = "";

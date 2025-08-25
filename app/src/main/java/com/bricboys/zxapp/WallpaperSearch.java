@@ -101,7 +101,7 @@ public class WallpaperSearch extends AppCompatActivity implements LoaderManager.
 
         if (!wallpaper.getmRunningScreen().isEmpty()) {
             String url;
-            Ion.getDefault(this).getHttpClient().getSSLSocketMiddleware().setSpdyEnabled(false);
+            Ion.getDefault(this).getHttpClient().getSSLSocketMiddleware();
             url = wallpaper.getmRunningScreen();
             if (!url.isEmpty()) {
                 String newUrl = "";
@@ -123,7 +123,7 @@ public class WallpaperSearch extends AppCompatActivity implements LoaderManager.
 
         if (!wallpaper.getmLoadingScreen().isEmpty()) {
             String url;
-            Ion.getDefault(this).getHttpClient().getSSLSocketMiddleware().setSpdyEnabled(false);
+            Ion.getDefault(this).getHttpClient().getSSLSocketMiddleware();
             url = wallpaper.getmLoadingScreen();
             if (!url.isEmpty()) {
                 String newUrl = "";

@@ -58,7 +58,7 @@ public class DetailsActivityBackup extends AppCompatActivity implements LoaderMa
 
     private void formataTela(Details detail) {
 
-        Ion.getDefault(this).getHttpClient().getSSLSocketMiddleware().setSpdyEnabled(false);
+        Ion.getDefault(this).getHttpClient().getSSLSocketMiddleware();
         url = detail.getmInlay();
         if (!url.isEmpty()) {
             String newUrl = "";
