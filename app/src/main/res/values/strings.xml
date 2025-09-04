@@ -10,4 +10,6 @@
     <string name="downloads">Downloads</string>
     <string name="moreinfo">More Info</string>
     <string name="zxart">ZX Art</string>
+    <string name="loading_screen_image">Loading Screen Image</string>
+    <string name="loading_screen">Loading Screen</string>
 </resources>

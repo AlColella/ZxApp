@@ -14,8 +14,8 @@
         app:tabGravity="fill"
         app:tabMaxWidth="0dp"
         app:tabMode="fixed"
-        app:tabTextAppearance="@style/MineCustomTabText"
         app:tabSelectedTextColor="@android:color/black"
+        app:tabTextAppearance="@style/MineCustomTabText"
         app:tabTextColor="@android:color/white" />
 
     <androidx.viewpager.widget.ViewPager
