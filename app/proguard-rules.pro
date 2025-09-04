@@ -1,3 +1,4 @@
+
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
@@ -19,3 +20,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep all classes in the org.conscrypt package and their members
+-keep class org.conscrypt.** { *; }
+
+# Don't warn about unresolved references to classes in the org.conscrypt package
+-dontwarn org.conscrypt.**
