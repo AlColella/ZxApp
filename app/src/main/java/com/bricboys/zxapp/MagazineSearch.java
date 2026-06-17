@@ -1,84 +1,128 @@
 package com.bricboys.zxapp;
 
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class MagazineSearch extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Magazine>> {
+import com.bricboys.zxapp.adapter.MagazineAdapter;
+import com.bricboys.zxapp.viewmodel.FavoriteViewModel;
+import com.bricboys.zxapp.viewmodel.MagazineViewModel;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
+public class MagazineSearch extends AppCompatActivity {
 
-    //https://api.zxinfo.dk/api/zxinfo/v2/magazines/Sinclair%20User/issuesp
     private String mParametro;
-    private ProgressBar pbar;
     private MagazineAdapter mAdapter;
+    private MagazineViewModel mViewModel;
+    private FavoriteViewModel mFavoriteViewModel;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private ShimmerFrameLayout mShimmer;
+    private TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.magazine_search);
-        setTitle("Magazine List");
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.magazine_search_root), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Magazine List");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
         mParametro = intent.getStringExtra("parametro");
-        ParameterClass.parameter = mParametro;
 
-        pbar = findViewById(R.id.indeterminateBar);
-        pbar.setVisibility(View.VISIBLE);
+        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mShimmer = findViewById(R.id.shimmer_view_container);
+        mEmptyView = findViewById(R.id.empty_list_item);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
-        boolean isConnected = ConnectionManager.verifyConnection(MagazineSearch.this);
-
-        if (isConnected) {
-            mAdapter = new MagazineAdapter(this, 0, new ArrayList<Magazine>());
-            final ListView listView = findViewById(R.id.list);
-            listView.setAdapter(mAdapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(MagazineSearch.this, MagazineShow.class);
-                    intent.putExtra("item", mAdapter.getItem(position).getMagazineImage());
-                    startActivity(intent);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        
+        mFavoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        
+        mAdapter = new MagazineAdapter(
+            item -> {
+                Intent showIntent = new Intent(MagazineSearch.this, MagazineShow.class);
+                showIntent.putExtra("item", item.getMagazineImage());
+                showIntent.putExtra("title", item.getMagazineTitle());
+                startActivity(showIntent);
+            },
+            item -> {
+                String url = item.getMagazineImage();
+                String fullUrl = url;
+                if (url != null) {
+                    if (url.startsWith("/pub/sinclair/")) {
+                        fullUrl = url.replace("/pub/sinclair/", ParameterClass.pubSinclair);
+                    } else if (url.startsWith("/zxdb/sinclair/")) {
+                        fullUrl = url.replace("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
+                    }
                 }
-            });
-            getLoaderManager().initLoader(1, null, MagazineSearch.this);
-        } else {
-            ListView listView = findViewById(R.id.list);
-            TextView emptyView = findViewById(R.id.empty_list_item);
-            emptyView.setText(R.string.noInternet);
-            listView.setEmptyView(emptyView);
-            pbar.setVisibility(View.GONE);
+                mFavoriteViewModel.toggleFavorite(item.getMagazineImage(), item.getMagazineTitle(), "MAGAZINE", fullUrl);
+            }
+        );
+        recyclerView.setAdapter(mAdapter);
+
+        mFavoriteViewModel.getAllFavoriteIds().observe(this, ids -> {
+            mAdapter.setFavoriteIds(ids);
+        });
+
+        mViewModel = new ViewModelProvider(this).get(MagazineViewModel.class);
+
+        mViewModel.getMagazines().observe(this, list -> {
+            mAdapter.setItems(list);
+            mEmptyView.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
+        });
+
+        mViewModel.getIsLoading().observe(this, isLoading -> {
+            if (isLoading) {
+                mShimmer.startShimmer();
+                mShimmer.setVisibility(View.VISIBLE);
+            } else {
+                mShimmer.stopShimmer();
+                mShimmer.setVisibility(View.GONE);
+                mSwipeRefresh.setRefreshing(false);
+            }
+        });
+
+        mViewModel.getError().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mSwipeRefresh.setOnRefreshListener(() -> mViewModel.loadMagazines(mParametro));
+
+        if (mViewModel.getMagazines().getValue() == null) {
+            mViewModel.loadMagazines(mParametro);
         }
     }
 
     @Override
-    public Loader<ArrayList<Magazine>> onCreateLoader(int id, Bundle args) {
-        //return new MagazineLoader(this, mParametro);
-        return new MagazineLoader(this,ParameterClass.parameter);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<ArrayList<Magazine>> loader, ArrayList<Magazine> data) {
-        mAdapter.clear();
-        if (data != null && !data.isEmpty()) {
-            mAdapter.addAll(data);
-        } else {
-            ListView listView = findViewById(R.id.list);
-            listView.setEmptyView(findViewById(R.id.empty_list_item));
-        }
-        pbar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ArrayList<Magazine>> loader) {
-        mAdapter.clear();
+    public boolean onSupportNavigateUp() {
+        getOnBackPressedDispatcher().onBackPressed();
+        return true;
     }
 }

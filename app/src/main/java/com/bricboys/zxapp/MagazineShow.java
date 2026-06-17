@@ -1,49 +1,57 @@
 package com.bricboys.zxapp;
 
-import android.content.Context;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import android.content.Intent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.os.Bundle;
 
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 
 public class MagazineShow extends AppCompatActivity {
 
-    private Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.magazine_show);
-        setTitle("Full screen");
-        context = this;
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.magazine_show_root), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         Intent intent = getIntent();
         String param = intent.getStringExtra("item");
-        //Log.e("item", param);
+        String title = intent.getStringExtra("title");
 
-        if(!param.isEmpty()) {
+        PhotoView coverView = findViewById(R.id.magazineShow);
+        if(param != null && !param.isEmpty()) {
             String url = param;
-            String newUrl = null;
-            if (url.substring(0,14).equals("/pub/sinclair/")) {
-                newUrl = url.replaceAll("/pub/sinclair/", ParameterClass.pubSinclair);
+            String newUrl;
+            if (url.startsWith("/pub/sinclair/")) {
+                newUrl = url.replace("/pub/sinclair/", ParameterClass.pubSinclair);
+            } else if (url.startsWith("/zxdb/sinclair/")) {
+                newUrl = url.replace("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
             } else {
-                newUrl = url.replaceAll("/zxdb/sinclair/", ParameterClass.zxdbSinclair);
+                newUrl = url;
             }
-            ImageView coverView = findViewById(R.id.magazineShow);
-           // Picasso.with(context).cancelRequest(coverView);
             Picasso.get().load(newUrl).into(coverView);
         }
 
-        Button btnClose = findViewById(R.id.btnIvClose);
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
+        findViewById(R.id.btnIvClose).setOnClickListener(v -> finish());
+
+        findViewById(R.id.btnShare).setOnClickListener(v -> {
+            ImageUtils.shareImage(this, coverView, title);
+        });
+
+        findViewById(R.id.btnSetWallpaper).setOnClickListener(v -> {
+            ImageUtils.setWallpaper(this, coverView);
         });
     }
 }

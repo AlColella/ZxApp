@@ -1,98 +1,128 @@
 package com.bricboys.zxapp;
 
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
-import android.net.Uri;
-import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.bricboys.zxapp.adapter.GeneralAdapter;
 import com.bricboys.zxapp.details.DetailsActivity;
+import com.bricboys.zxapp.viewmodel.FavoriteViewModel;
+import com.bricboys.zxapp.viewmodel.GeneralViewModel;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
-import java.util.ArrayList;
-
-public class GeneralSearch extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<General>>{
+public class GeneralSearch extends AppCompatActivity {
 
     private String mParametro;
-    private ProgressBar pbar;
     private GeneralAdapter mAdapter;
+    private GeneralViewModel mViewModel;
+    private FavoriteViewModel mFavoriteViewModel;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private ShimmerFrameLayout mShimmer;
+    private TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.general_search);
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.general_search_root), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
         Intent intent = getIntent();
         mParametro = intent.getStringExtra("parametro");
-        setTitle("General list: " + mParametro);
 
-        pbar = findViewById(R.id.indeterminateBar);
-        pbar.setVisibility(View.VISIBLE);
-
-        boolean isConnected = ConnectionManager.verifyConnection(GeneralSearch.this);
-
-        if (isConnected) {
-            mAdapter = new GeneralAdapter(this, 0, new ArrayList<General>());
-            ListView listView = findViewById(R.id.list_general);
-            listView.setAdapter(mAdapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //openYoutube(mAdapter.getItem(position).getmYoutubeLink());
-                    String itemId = mAdapter.getItem(position).getmId();
-                    String type = mAdapter.getItem(position).getmType();
-                    String name = mAdapter.getItem(position).getmTitle();
-                    //if(type.contains("Game")) {
-                        Intent detail = new Intent(GeneralSearch.this, DetailsActivity.class);
-                        detail.putExtra("itemId", itemId);
-                        detail.putExtra("name", name);
-                        startActivity(detail);
-                    //}
-                }
-            });
-            getLoaderManager().initLoader(1, null, GeneralSearch.this);
-        } else {
-            ListView listView = findViewById(R.id.list_general);
-            TextView emptyView = findViewById(R.id.empty_list_item);
-            emptyView.setText(R.string.noInternet);
-            listView.setEmptyView(emptyView);
-            pbar.setVisibility(View.GONE);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("General Search: " + mParametro);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        
+        // Force Toolbar colors via code to ensure they are light
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getNavigationIcon() != null) {
+            toolbar.getNavigationIcon().setTint(Color.WHITE);
         }
 
-        //String parm = parametro.replaceAll(" ", "%20");
-        //Log.e("Parametro: ", parm);
-    }
+        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mShimmer = findViewById(R.id.shimmer_view_container);
+        mEmptyView = findViewById(R.id.empty_list_item);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
-    private void openYoutube(String youtubeUrl) {
-        if(!youtubeUrl.isEmpty()) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl)));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        
+        mFavoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        
+        mAdapter = new GeneralAdapter(
+            item -> {
+                Intent detail = new Intent(GeneralSearch.this, DetailsActivity.class);
+                detail.putExtra("itemId", item.getmId());
+                detail.putExtra("name", item.getmTitle());
+                startActivity(detail);
+            },
+            item -> {
+                String imageUrl = item.getmImageId() != null ? "https://zxinfo.dk/media" + item.getmImageId() : "";
+                mFavoriteViewModel.toggleFavorite(item.getmId(), item.getmTitle(), "GENERAL", imageUrl);
+            }
+        );
+        recyclerView.setAdapter(mAdapter);
+
+        mFavoriteViewModel.getAllFavoriteIds().observe(this, ids -> {
+            mAdapter.setFavoriteIds(ids);
+        });
+
+        mViewModel = new ViewModelProvider(this).get(GeneralViewModel.class);
+
+        mViewModel.getGenerals().observe(this, list -> {
+            mAdapter.setItems(list);
+            mEmptyView.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
+        });
+
+        mViewModel.getIsLoading().observe(this, isLoading -> {
+            if (isLoading) {
+                mShimmer.startShimmer();
+                mShimmer.setVisibility(View.VISIBLE);
+            } else {
+                mShimmer.stopShimmer();
+                mShimmer.setVisibility(View.GONE);
+                mSwipeRefresh.setRefreshing(false);
+            }
+        });
+
+        mViewModel.getError().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mSwipeRefresh.setOnRefreshListener(() -> mViewModel.search(mParametro));
+
+        if (mViewModel.getGenerals().getValue() == null) {
+            mViewModel.search(mParametro);
         }
     }
 
     @Override
-    public Loader<ArrayList<General>> onCreateLoader(int id, Bundle args) {
-        return new GeneralLoader(this, mParametro);
+    public boolean onSupportNavigateUp() {
+        getOnBackPressedDispatcher().onBackPressed();
+        return true;
     }
-
-    @Override
-    public void onLoadFinished(Loader<ArrayList<General>> loader, ArrayList<General> data) {
-        mAdapter.clear();
-        if (data != null && !data.isEmpty()) {
-            mAdapter.addAll(data);
-        } else {
-            ListView listView = findViewById(R.id.list_general);
-            listView.setEmptyView(findViewById(R.id.empty_list_item));
-        }
-        pbar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ArrayList<General>> loader) {
-        mAdapter.clear();
-    }
-
 }

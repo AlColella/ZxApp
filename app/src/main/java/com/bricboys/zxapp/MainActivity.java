@@ -4,8 +4,15 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,14 +26,24 @@ public class MainActivity extends AppCompatActivity {
     private TextView mGeneralTextView;
     private TextView mWallpaperTextView;
     private TextView mZxArtTextView;
+    private TextView mFavoritesTextView;
     private static int REQUEST_CODE=1;
     //private TextView mPublisherTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_root_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
         ActivityCompat.requestPermissions(this, new String[]{
@@ -37,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mMagazineTextView = findViewById(R.id.magazineTextView);
         mGeneralTextView = findViewById(R.id.generalTextView);
         mWallpaperTextView = findViewById(R.id.wallpaperTextView);
-       // mPublisherTextView = findViewById(R.id.publisherTextView);
+        mFavoritesTextView = findViewById(R.id.favoritesTextView);
 
         mZxArtTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
                 wallpaperIntent.putExtra("total", "1");
                 wallpaperIntent.putExtra("mode", "full");
                 startActivity(wallpaperIntent);
+            }
+        });
+
+        mFavoritesTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent favoritesIntent = new Intent(MainActivity.this, FavoritesActivity.class);
+                startActivity(favoritesIntent);
             }
         });
 

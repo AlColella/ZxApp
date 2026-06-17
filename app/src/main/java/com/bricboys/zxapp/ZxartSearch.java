@@ -1,83 +1,119 @@
 package com.bricboys.zxapp;
 
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class ZxartSearch extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<ZxArt>> {
+import com.bricboys.zxapp.adapter.ZxArtAdapter;
+import com.bricboys.zxapp.viewmodel.FavoriteViewModel;
+import com.bricboys.zxapp.viewmodel.ZxArtViewModel;
+import com.facebook.shimmer.ShimmerFrameLayout;
+
+public class ZxartSearch extends AppCompatActivity {
 
     private String mParametro;
-    private ProgressBar pbar;
-    private ZxartAdapter mAdapter;
+    private ZxArtAdapter mAdapter;
+    private ZxArtViewModel mViewModel;
+    private FavoriteViewModel mFavoriteViewModel;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private ShimmerFrameLayout mShimmer;
+    private TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zxart_search);
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.zxart_search_root), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
         Intent intent = getIntent();
         mParametro = intent.getStringExtra("parametro");
-        ParameterClass.parameter = mParametro;
 
-        setTitle("ZxArt List: " + mParametro);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("ZxArt List: " + mParametro);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        pbar = findViewById(R.id.indeterminateBar);
-        pbar.setVisibility(View.VISIBLE);
+        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mShimmer = findViewById(R.id.shimmer_view_container);
+        mEmptyView = findViewById(R.id.empty_list_item);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
-        boolean isConnected = ConnectionManager.verifyConnection(ZxartSearch.this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        
+        mFavoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        
+        mAdapter = new ZxArtAdapter(
+            item -> {
+                Intent showIntent = new Intent(ZxartSearch.this, ZxartShow.class);
+                showIntent.putExtra("item", item.getmPictureImage());
+                showIntent.putExtra("title", item.getmTitle());
+                startActivity(showIntent);
+            },
+            item -> {
+                mFavoriteViewModel.toggleFavorite(item.getmPictureImage(), item.getmTitle(), "ART", item.getmPictureImage());
+            }
+        );
+        recyclerView.setAdapter(mAdapter);
 
-        if (isConnected) {
-            mAdapter = new ZxartAdapter(this, 0, new ArrayList<ZxArt>());
-            final ListView listView = findViewById(R.id.list);
-            listView.setAdapter(mAdapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(ZxartSearch.this, ZxartShow.class);
-                    intent.putExtra("item", mAdapter.getItem(position).getmPictureImage());
-                    startActivity(intent);
-                }
-            });
-            getLoaderManager().initLoader(1, null, ZxartSearch.this);
-        } else {
-            ListView listView = findViewById(R.id.list);
-            TextView emptyView = findViewById(R.id.empty_list_item);
-            emptyView.setText(R.string.noInternet);
-            listView.setEmptyView(emptyView);
-            pbar.setVisibility(View.GONE);
+        mFavoriteViewModel.getAllFavoriteIds().observe(this, ids -> {
+            mAdapter.setFavoriteIds(ids);
+        });
+
+        mViewModel = new ViewModelProvider(this).get(ZxArtViewModel.class);
+
+        mViewModel.getZxArts().observe(this, list -> {
+            mAdapter.setItems(list);
+            mEmptyView.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
+        });
+
+        mViewModel.getIsLoading().observe(this, isLoading -> {
+            if (isLoading) {
+                mShimmer.startShimmer();
+                mShimmer.setVisibility(View.VISIBLE);
+            } else {
+                mShimmer.stopShimmer();
+                mShimmer.setVisibility(View.GONE);
+                mSwipeRefresh.setRefreshing(false);
+            }
+        });
+
+        mViewModel.getError().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mSwipeRefresh.setOnRefreshListener(() -> mViewModel.search(mParametro));
+
+        if (mViewModel.getZxArts().getValue() == null) {
+            mViewModel.search(mParametro);
         }
     }
 
-
-
     @Override
-    public Loader<ArrayList<ZxArt>> onCreateLoader(int i, Bundle bundle) {
-        return new ZxartLoader(this,ParameterClass.parameter);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<ArrayList<ZxArt>> loader, ArrayList<ZxArt> data) {
-        mAdapter.clear();
-        if (data != null && !data.isEmpty()) {
-            mAdapter.addAll(data);
-        } else {
-            ListView listView = findViewById(R.id.list);
-            listView.setEmptyView(findViewById(R.id.empty_list_item));
-        }
-        pbar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ArrayList<ZxArt>> loader) {
-        mAdapter.clear();
+    public boolean onSupportNavigateUp() {
+        getOnBackPressedDispatcher().onBackPressed();
+        return true;
     }
 }

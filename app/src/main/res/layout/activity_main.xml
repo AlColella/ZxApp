@@ -1,58 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Passo 1: O layout raiz (o pai de todos) agora é um CoordinatorLayout.
+    Ele substituiu o seu antigo LinearLayout como o elemento principal.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#C5CAE9"
-    tools:context="com.bricboys.zxapp.MainActivity">
+    tools:context=".MainActivity">
 
-
-    <FrameLayout
+    <!--
+        Passo 2: Adicionamos a barra de topo (AppBarLayout com uma Toolbar dentro).
+        É aqui que o título "ZX App" e o seu menu "Sobre" irão aparecer.
+    -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/category_zxart">
-        <TextView
-            android:id="@+id/zxartTextView"
-            android:text="@string/zxart"
-            android:textColor="@android:color/white"
-            style="@style/CategoryStyle"
-            android:background="?android:attr/selectableItemBackground"/>
-    </FrameLayout>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <FrameLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!--
+        Passo 3: Colocamos seu conteúdo principal dentro de um NestedScrollView.
+        A propriedade 'layout_behavior' é a "mágica" que diz para este conteúdo
+        ficar sempre ABAIXO da barra de topo (AppBarLayout).
+    -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/category_magazine">
-    <TextView
-        android:id="@+id/magazineTextView"
-        android:text="Magazine Covers"
-        android:textColor="@android:color/white"
-        style="@style/CategoryStyle"
-        android:background="?android:attr/selectableItemBackground"/>
-    </FrameLayout>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/category_general">
-        <TextView
-            android:id="@+id/generalTextView"
-            android:text="General Search"
-            style="@style/CategoryStyle"
-            android:background="?android:attr/selectableItemBackground"/>
-    </FrameLayout>
+        <!--
+            AQUI ESTÁ O SEU ANTIGO 'activity_main.xml'!
+            É o seu LinearLayout com todas as categorias (ZX Art, etc.).
+            Ele agora vive dentro de um container que rola a tela.
+        -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#C5CAE9"
+            android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/category_more">
-        <TextView
-            android:id="@+id/wallpaperTextView"
-            android:text="Wallpapers"
-            android:textColor="@android:color/white"
-            style="@style/CategoryStyle"
-            android:background="?android:attr/selectableItemBackground"/>
-    </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/category_zxart">
 
-</LinearLayout>
+                <TextView
+                    android:id="@+id/zxartTextView"
+                    style="@style/CategoryStyle"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="@string/zxart"
+                    android:textColor="@android:color/white" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/category_magazine">
+
+                <TextView
+                    android:id="@+id/magazineTextView"
+                    style="@style/CategoryStyle"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Magazine Covers"
+                    android:textColor="@android:color/white" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/category_general">
+
+                <TextView
+                    android:id="@+id/generalTextView"
+                    style="@style/CategoryStyle"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="General Search" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#9575CD">
+
+                <TextView
+                    android:id="@+id/favoritesTextView"
+                    style="@style/CategoryStyle"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Favorites"
+                    android:textColor="@android:color/white" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/category_more">
+
+                <TextView
+                    android:id="@+id/wallpaperTextView"
+                    style="@style/CategoryStyle"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Wallpapers"
+                    android:textColor="@android:color/white" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

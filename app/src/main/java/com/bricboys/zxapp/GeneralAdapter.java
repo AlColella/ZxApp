@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +107,7 @@ public class GeneralAdapter extends ArrayAdapter<General> {
                                 newUrl = "https://zxinfo.dk/media" + url;
                             }
 
-                            //Log.e("Running", "url: " + newUrl);
+                            Log.e("Running", "url: " + newUrl);
                             text.setText("Running Screen");
                             ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
 
@@ -131,7 +132,7 @@ public class GeneralAdapter extends ArrayAdapter<General> {
                             newUrl = "https://zxinfo.dk/media" + url;
                         }
 
-                        //Log.e("Running", "url: " + newUrl);
+                        Log.e("Running", "url: " + newUrl);
                         text.setText("Running Screen");
                         ImageView imageView = listItemView.findViewById(R.id.loadingScreen);
 

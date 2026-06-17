@@ -4,8 +4,12 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,11 +34,15 @@ public class WallpaperSearch extends AppCompatActivity implements LoaderManager.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.wallpaper_activity);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.WallpaperLayout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         refreshBtn = findViewById(R.id.updateButton);
 
@@ -65,7 +73,7 @@ public class WallpaperSearch extends AppCompatActivity implements LoaderManager.
             }
         });
 
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
         Intent intent = getIntent();
         mTotal = intent.getStringExtra("total");

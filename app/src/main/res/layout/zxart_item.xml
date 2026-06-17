@@ -1,103 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#C5CAE9"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/zxart_image"
+            android:layout_width="120dp"
+            android:layout_height="90dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/no_photo" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/text_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_toEndOf="@id/zxart_image"
+            android:layout_toStartOf="@id/btnFavorite"
+            android:layout_marginStart="16dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/linear"
+            <TextView
+                android:id="@+id/zxart_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:orientation="horizontal">
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Title" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+            <TextView
+                android:id="@+id/zxart_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp"
+                tools:text="Rating" />
 
-                    <ImageView
-                        android:id="@+id/zxart_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="8dp"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/no_photo" />
-                </LinearLayout>
-            </LinearLayout>
+            <TextView
+                android:id="@+id/zxart_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp"
+                tools:text="Year" />
+
+            <TextView
+                android:id="@+id/zxart_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp"
+                tools:text="Author" />
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/btnFavorite"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/btn_star_big_off" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:foreground="?attr/selectableItemBackground"
-            android:orientation="vertical">
-
-
-
-                <TextView
-                    android:id="@+id/zxart_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:text="Your Sinclair" />
-
-                <TextView
-                    android:id="@+id/zxart_rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/zxart_title"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    tools:text="Issue number: 1" />
-
-                <TextView
-                    android:id="@+id/zxart_year"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/zxart_rating"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    tools:text="Year: 1998" />
-
-                <TextView
-                    android:id="@+id/zxart_author"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/zxart_year"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    tools:text="Author: Colella" />
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
