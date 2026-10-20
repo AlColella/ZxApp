@@ -68,19 +68,6 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/category_magazine">
-
-                <TextView
-                    android:id="@+id/magazineTextView"
-                    style="@style/CategoryStyle"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:text="Magazine Covers"
-                    android:textColor="@android:color/white" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:background="@color/category_general">
 
                 <TextView

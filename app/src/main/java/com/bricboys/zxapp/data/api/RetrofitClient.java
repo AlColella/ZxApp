@@ -16,7 +16,7 @@ public class RetrofitClient {
             OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
             zxinfoRetrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.zxinfo.dk/v3/")
+                    .baseUrl("https://api.zxinfo.dk/v5/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

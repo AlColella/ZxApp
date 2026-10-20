@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mMagazineTextView;
     private TextView mGeneralTextView;
     private TextView mWallpaperTextView;
     private TextView mZxArtTextView;
@@ -51,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         }, REQUEST_CODE);
 
         mZxArtTextView = findViewById(R.id.zxartTextView);
-        mMagazineTextView = findViewById(R.id.magazineTextView);
         mGeneralTextView = findViewById(R.id.generalTextView);
         mWallpaperTextView = findViewById(R.id.wallpaperTextView);
         mFavoritesTextView = findViewById(R.id.favoritesTextView);
@@ -61,14 +59,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent zxartIntent = new Intent(MainActivity.this, ZxartActivity.class);
                 startActivity(zxartIntent);
-            }
-        });
-
-        mMagazineTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent magazineIntent = new Intent(MainActivity.this, MagazineActivity.class);
-                startActivity(magazineIntent);
             }
         });
 

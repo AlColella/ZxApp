@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
 
 public class DetailsQuery {
     private final static String GENERAL_URL =
-        "https://api.zxinfo.dk/v3/games/";
+        "https://api.zxinfo.dk/v5/entries/";
         //"https://api.zxinfo.dk/api/zxinfo/games/";
 
     private DetailsQuery() {};

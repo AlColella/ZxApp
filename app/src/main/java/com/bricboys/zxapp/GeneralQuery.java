@@ -20,7 +20,7 @@ import java.util.List;
 public class GeneralQuery {
 
     private final static String GENERAL_URL =
-            "https://api.zxinfo.dk/v3/search?query=";
+            "https://api.zxinfo.dk/v5/search/";
     //        "https://api.zxinfo.dk/api/zxinfo/v2/search?query=";
 
 
@@ -157,7 +157,7 @@ public class GeneralQuery {
     private static URL createUrl(String magazineUrl, String parametro) {
         URL url = null;
         String parametroFormatted = parametro.replaceAll(" ", "%20");
-        String newUrl = magazineUrl + parametroFormatted + "&mode=compact&size=100&offset=0";
+        String newUrl = magazineUrl + parametroFormatted + "?mode=compact&size=100&offset=0";
         try {
             url = new URL(newUrl);
         } catch (MalformedURLException e) {

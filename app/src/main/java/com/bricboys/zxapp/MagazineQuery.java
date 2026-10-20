@@ -20,7 +20,7 @@ import java.util.List;
 public final class MagazineQuery {
 
     private final static String MAGAZINE_URL =
-            "https://api.zxinfo.dk/v3/magazines/";
+            "https://api.zxinfo.dk/v5/magazines/";
           //  "https://api.zxinfo.dk/api/zxinfo/v2/magazines/";
 
     private MagazineQuery() {};

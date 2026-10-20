@@ -20,7 +20,7 @@ import java.util.List;
 
 public class WallpaperQuery {
 
-    private final static String RANDOM_URL = "https://api.zxinfo.dk/v3/games/random/1?mode=full";
+    private final static String RANDOM_URL = "https://api.zxinfo.dk/v5/entries/random/1?mode=full";
             //"https://api.zxinfo.dk/api/zxinfo/games/random/1?mode=full";
 
     private WallpaperQuery(){}
@@ -83,7 +83,8 @@ public class WallpaperQuery {
     private static URL createUrl(String magazineUrl, String mTotal, String mMode) {
         URL url = null;
         //String parametroFormatted = mMode.replaceAll(/" ", "%20");
-        String newUrl = magazineUrl; // + "?timestamp=" + new Date(); // + parametroFormatted + "&mode=full&sort=title_asc&size=1000&offset=0";
+        // timestamp evita o cache do servidor, que devolveria sempre o mesmo software
+        String newUrl = magazineUrl + "&timestamp=" + System.currentTimeMillis(); // + parametroFormatted + "&mode=full&sort=title_asc&size=1000&offset=0";
         //Log.e("URL random: ", newUrl);
         try {
             url = new URL(newUrl);

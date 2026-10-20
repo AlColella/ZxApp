@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TapeQuery {
-    private final static String GENERAL_URL = "https://api.zxinfo.dk/v3/games/";
+    private final static String GENERAL_URL = "https://api.zxinfo.dk/v5/entries/";
             //"https://api.zxinfo.dk/api/zxinfo/games/";
 
     private TapeQuery(){}
