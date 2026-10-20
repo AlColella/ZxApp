@@ -20,7 +20,7 @@ import java.util.List;
 
 public class WallpaperQuery {
 
-    private final static String RANDOM_URL = "https://api.zxinfo.dk/v3/games/random/1?mode=full";
+    private final static String RANDOM_URL = "https://api.zxinfo.dk/v5/entries/random/1?mode=full";
             //"https://api.zxinfo.dk/api/zxinfo/games/random/1?mode=full";
 
     private WallpaperQuery(){}
