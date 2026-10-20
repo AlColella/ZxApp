@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion 36
     defaultConfig {
         applicationId "com.bricboys.zxapp"
-        minSdkVersion 23
-        targetSdkVersion 35
-        versionCode 45
+        minSdkVersion 24
+        targetSdkVersion 36
+        versionCode 47
         versionName "Loki"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
